@@ -23,7 +23,8 @@ class Customer:
         print(f"{self.name} has {self.money} dollars")
 
     def calculate_buyer_balance_of_money(self, money: int) -> None:
-        print(f"{self.name} now has {self.money - money} dollars\n")
+        self.money = self.money - money
+        print(f"{self.name} now has {self.money} dollars\n")
 
     def get_price_product_cart(self, shop: Shop, file_config: dict) -> int:
         distance = (
@@ -38,7 +39,7 @@ class Customer:
         )
 
         price_fuel = (
-            (distance * 2 / 100 * self.fuel_consumption)
+            (distance / 100 * self.fuel_consumption) * 2
             * file_config["FUEL_PRICE"]
         )
 
@@ -58,14 +59,14 @@ class Customer:
         print(f"Thanks, {self.name}, for your purchase!")
         print("You have bought:")
 
-        total_coast = 0.0
+        total_cost = 0.0
         for key, value in self.product_cart.items():
-            total_coast += value * shop.products[key]
+            total_cost += value * shop.products[key]
             print(
                 f"{value} {key}s for "
                 f"{f'{value * shop.products[key]}'.rstrip('0').rstrip('.')} "
                 f"dollars"
             )
-        print(f"Total cost is {total_coast} dollars")
+        print(f"Total cost is {total_cost} dollars")
         print("See you again!\n")
         print(f"{self.name} rides home")

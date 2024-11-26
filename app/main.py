@@ -18,21 +18,30 @@ def shop_trip() -> None:
         )
 
         buyer.print_customer_name_and_money()
-        price_in_shops = {}
+
+        shops_and_prices = {}
+        instance_shops = []
         for shop in file_config["shops"]:
             shop = Shop(shop["name"], shop["location"], shop["products"])
             price = buyer.get_price_product_cart(shop, file_config)
-            price_in_shops[shop] = price
-
-        shop_with_min_price = min(price_in_shops, key=price_in_shops.get)
-        min_price = price_in_shops[shop_with_min_price]
-
-        if buyer.money < min_price:
+            shops_and_prices[shop.name] = price
+            instance_shops.append({shop.name: shop})
+        name_shop_whit_best_price = min(
+            shops_and_prices, key=shops_and_prices.get
+        )
+        best_price = shops_and_prices[name_shop_whit_best_price]
+        instance_shop_whit_best_price = None
+        for instance_shop in instance_shops:
+            if name_shop_whit_best_price in instance_shop:
+                instance_shop_whit_best_price = (
+                    instance_shop.get(name_shop_whit_best_price)
+                )
+        if buyer.money < best_price:
             print(
                 f"{buyer.name} doesn't have enough money "
                 f"to make a purchase in any shop"
             )
         else:
-            buyer.change_location_buyer(shop_with_min_price)
-            buyer.print_check(shop_with_min_price)
-            buyer.calculate_buyer_balance_of_money(min_price)
+            buyer.change_location_buyer(instance_shop_whit_best_price)
+            buyer.print_check(instance_shop_whit_best_price)
+            buyer.calculate_buyer_balance_of_money(best_price)
